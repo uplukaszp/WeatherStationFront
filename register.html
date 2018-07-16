@@ -1,0 +1,33 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+  <link href="css/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+  <form class="form-signin ">
+    <h1 class="h3 mb-3 font-weight-normal">User Registration</h1>
+    <div class="col">
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus > 
+    </div>
+    <div class="col">
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required pattern=".{6,}">
+    </div>
+    <div class="col">
+      <label for="inputConfirmPassword" class="sr-only ">ConfirmPassword</label>
+      <input type="password" id="inputConfirmPassword" class="form-control " placeholder="Confirm password" required pattern=".{6,}">
+    </div>
+    <div class="col">
+      <button id="btn" class="btn btn-lg btn-primary btn-block register-button" type="submit">Sign in</button>
+    </div>
+  </form>
+  <script src="js/register.js"></script>
+</body>
+
+</html>
