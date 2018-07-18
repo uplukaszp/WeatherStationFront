@@ -1,32 +1,5 @@
-function validate(input, message = "") {
-    if (input.checkValidity()) {
-        input.classList.remove('is-invalid');
-        setValidationMessage(input, "");
-        return true;
-    } else {
-        input.classList.add('is-invalid');
-        setValidationMessage(input, message);
-        return false;
-    }
-}
 
-function addValidation(input) {
-    input.addEventListener('input', function () {
-        validate(this);
-    })
-}
 
-function setValidationMessage(input, message) {
-    if (message.length > 0) {
-        const messagediv = document.createElement('div');
-        messagediv.classList.add("invalid-tooltip");
-        messagediv.innerText = message;
-        input.parentNode.appendChild(messagediv);
-    } else {
-        if (input.parentNode.querySelector(".invalid-tooltip") != null)
-            input.parentNode.querySelector(".invalid-tooltip").remove();
-    }
-}
 
 
 
@@ -38,13 +11,7 @@ function validationProcess(email, password) {
 }
 
 
-function getDataToSend(inputEmail, inputPassword) {
-    const dataToSend = {
-        email: inputEmail.value,
-        password: inputPassword.value
-    };
-    return dataToSend;
-}
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -74,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(res => {
                     if (res.ok) {
                         let token=res.headers.get("Authorization");
-                        token=token.replace("Bearer ","");
+                        //token=token.replace("Bearer ","");
                         localStorage.setItem("Token",token);
                         window.location.href='dashboard.html'
                     } else {
@@ -83,12 +50,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                 }).catch(function(res){
-                    if (res.hasOwnProperty('message')) {
                         email.classList.add('is-invalid')
                         password.classList.add('is-invalid')
-                        setValidationMessage(email, res.message);
+                        setValidationMessage(email, 'Login failed: Invalid email or password');
                         password.classList.add('is-invalid')
-                    }
                 })
         }
     })
