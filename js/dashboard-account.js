@@ -5,7 +5,7 @@ function validationProcess(password, confPass) {
 }
 
 
-function createValidation() {
+function createValidationForPasswordChange() {
     const btn = document.getElementById("btn")
     const form = document.querySelector('.needs-validation');
     const password = document.getElementById("newPassword");
@@ -31,8 +31,6 @@ function createValidation() {
                 })
                 .then(res => {
                     if (res.ok) {
-                        password.value = "";
-                        confPass.value = "";
                         const alert = document.createElement('div');
                         alert.innerHTML = `  <div class="alert alert-success alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

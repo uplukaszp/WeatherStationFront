@@ -10,14 +10,22 @@ function loadDashboardContent(content) {
             div.appendChild(dom.body);
             if (content === 'main.html') loadchart();
             if (content === 'account.html') {
-                createValidation();
+                createValidationForPasswordChange();
                 addRemoveButtonListener();
+            }
+            if(content==='sensors.html')
+            {
+                createValidationForMeasurementSourceCreation();
+                createSensorFormListener();
+                loadMeasurementSources();
+                loadUnits();
+                loadApiKey();
             }
         })
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    loadDashboardContent('account.html');
+    loadDashboardContent('sensors.html');
     const hrefs = document.querySelector('ul').querySelectorAll('a');
     hrefs.forEach(href => {
         href.addEventListener('click', function (e) {

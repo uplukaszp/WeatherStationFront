@@ -39,19 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         window.location.href = 'login.html'
                     } else return res.json().then(Promise.reject.bind(Promise));
                 })
-                .then(function(res){
+                .catch(function(res){
                     const response=res;
                     if (response.hasOwnProperty('email')) {
                         email.classList.add('is-invalid')
                         setValidationMessage(email,response.email);
-                        console.log("email");
                     }
                     if (response.hasOwnProperty('password')) {
                         password.classList.add('is-invalid')
                         setValidationMessage(password,response.password);
-                        console.log("pw");
                     }
-                    console.log(response);
                 })
         }
     });
