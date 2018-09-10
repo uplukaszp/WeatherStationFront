@@ -30,7 +30,7 @@ function createValidationForMeasurementSourceCreation() {
                 longitude: longitude.value,
                 publicly: publiclyCheck.value,
             }
-            fetch('http://localhost:8080/measurementSource', {
+            fetch(restURL+'/measurementSource', {
                     mode: "cors",
                     method: 'post',
                     headers: {
