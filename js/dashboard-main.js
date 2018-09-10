@@ -266,7 +266,7 @@ function addSearchValidationAndListener() {
     if (validate(input, "Can not be empty")) {
       this.innerText = "Loading...";
       this.disabled = true;
-      fetch('http://localhost:8080/measurementSource?address=' + encodeURI(input.value), {
+      fetch(restURL+'/measurementSource?address=' + encodeURI(input.value), {
           mode: "cors",
           method: 'get',
           headers: {
@@ -298,7 +298,7 @@ function addSearchValidationAndListener() {
 function getSensorData() {
   const chartIds = loadChartArrayFromLocalStorage();
   console.log('sensor data');
-  fetch('http://localhost:8080/sensor?id=' + encodeURI(JSON.stringify(chartIds)), {
+  fetch(restURL+'/sensor?id=' + encodeURI(JSON.stringify(chartIds)), {
       mode: 'cors',
       method: 'get',
       headers: {

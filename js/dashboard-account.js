@@ -20,7 +20,7 @@ function createValidationForPasswordChange() {
                 password: password.value
             };
 
-            fetch('http://localhost:8080/user', {
+            fetch(restURL+'/user', {
                     mode: "cors",
                     method: 'put',
                     headers: {
@@ -61,7 +61,7 @@ function addRemoveButtonListener() {
             console.log(yesBtn);
             yesBtn.addEventListener('click', function () {
                     console.log("event");
-                    fetch('http://localhost:8080/user', {
+                    fetch(restURL+'/user', {
                         mode: "cors",
                         method: 'delete',
                         headers: {

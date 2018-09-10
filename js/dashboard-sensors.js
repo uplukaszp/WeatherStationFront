@@ -168,7 +168,7 @@ function fillMeasurementSourceSelector() {
 }
 
 function loadMeasurementSources() {
-    fetch('http://localhost:8080/measurementSource', {
+    fetch(restURL+'/measurementSource', {
             mode: "cors",
             method: 'get',
             headers: {
@@ -196,7 +196,7 @@ function fillUnitSelector() {
 }
 
 function loadUnits() {
-    fetch('http://localhost:8080/unit', {
+    fetch(restURL+'/unit', {
             mode: "cors",
             method: 'get',
             headers: {
@@ -227,7 +227,7 @@ function createSensorFormListener() {
             }).id
         }
         console.log(dataToSend);
-        fetch('http://localhost:8080/sensor', {
+        fetch(restURL+'/sensor', {
                 mode: "cors",
                 method: 'post',
                 headers: {
@@ -250,7 +250,7 @@ function createSensorFormListener() {
 
 function loadApiKey() {
     const apiInput = document.getElementById('key');
-    fetch('http://localhost:8080/key', {
+    fetch(restURL+'/key', {
         mode: "cors",
         method: "get",
         headers: {

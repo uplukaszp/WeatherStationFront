@@ -1,7 +1,9 @@
+var restURL="https://javameteo.herokuapp.com";
+//"http://localhost:8080";
+
 function loadDashboardContent(content) {
     if (content === 'logout.html') window.location.href = content;
     const div = document.getElementById('content');
-    //const hrefs=document.querySelectorAll('.');
     fetch('dashboard-content/' + content)
         .then(response => response.text())
         .then(response => {
