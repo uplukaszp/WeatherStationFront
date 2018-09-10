@@ -1,36 +1,23 @@
-    <div>
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
-      </div>
-      <div class="chartDiv"></div>
-
-      <h2>Section title</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1,001</td>
-              <td>Lorem</td>
-              <td>ipsum</td>
-              <td>dolor</td>
-              <td>sit</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div>
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+        <span data-feather="calendar"></span>
+        This week
+      </button>
     </div>
+  </div>
+  <div id="searchDiv" class="col-md-6 mb-3">
+    <form class=" needs-validation row">
+      <div class="col-md-5 mb-3">
+        <input type="text" id="searchInput" class="form-control" required placeholder="Type your location">
+      </div>
+      <button type="submit" id="searchButton" class="btn btn-primary align-self-end col-md-3 mb-3">Find</button>
+    </form>
+    <ul class="list-group list-group-flush">
+    </ul>
+  </div>
+  <div id="charts" class="row border-top pt-3">
+  </div>
+</div>

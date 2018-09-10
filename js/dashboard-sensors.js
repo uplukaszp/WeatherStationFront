@@ -41,6 +41,7 @@ function createValidationForMeasurementSourceCreation() {
                 }).then(res => {
                     if (res.ok) {
                         form.reset();
+                        loadMeasurementSources();
                     } else return res.json().then(Promise.reject.bind(Promise));
                 })
                 .catch(function (res) {
@@ -79,7 +80,7 @@ function fillSensorsList(index) {
     for (let sensor of sensors) {
         const li = document.createElement('li');
 
-        const last = (sensor.measurements.length !== 0) ? sensor.measurements[sensor.measurements.length - 1] : null;
+        const last = sensor.measurements;
         const lastTime = (last === null || last.date === null) ? '-' : getDate(last.date);
         const lastValue = (last === null || last.value === null) ? '-' : last.value;
         li.classList.add('list-group-item');
@@ -107,6 +108,7 @@ function fillMeasurementSourcesList() {
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
+    console.log(measurementSources)
     for (let source of measurementSources) {
         const button = document.createElement('button');
         button.classList.add('list-group-item');
