@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (validationProcess(email, password, confPass)) {
             const dataToSend = getDataToSend(email, password);
 
-            fetch('http://localhost:8080/user', {
+            fetch(restURL+'/user', {
                 mode:"cors",
                    // credentials:"include",
                     method: 'post',

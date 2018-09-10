@@ -1,5 +1,3 @@
-var restURL="https://javameteo.herokuapp.com";
-//"http://localhost:8080";
 
 function loadDashboardContent(content) {
     if (content === 'logout.html') window.location.href = content;
