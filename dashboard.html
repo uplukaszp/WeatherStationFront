@@ -12,14 +12,18 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand nav-link col-sm-3 col-md-2 mr-0" href="https://github.com/uplukaszp">
-      <span data-feather="github"></span> Find me</a>
+  <nav class="navbar navbar-dark fixed-top bg-dark flex-nowrap p-0 shadow navbar-expand-md">
+    <button class="navbar-toggler mx-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand nav-link col-2 mr-0 ml-auto d-inline" href="https://github.com/uplukaszp">
+      <span data-feather="github" style="display:inline;"></span><span class="d-sm-none d-none d-md-inline">Find me</span></a>
   </nav>
 
   <div class="container-fluid">
     <div class="row">
-      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+      <nav class="col-12 col-md-2  bg-light sidebar navbar-collapse show" id="navbarSupportedContent">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item">
@@ -50,8 +54,8 @@
         </div>
       </nav>
 
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <div id="content"></div>
+      <main role="main" class="col-12 col-md-10 ml-sm-auto">
+        <div id="content" class="container-fluid"></div>
       </main>
     </div>
   </div>
@@ -78,4 +82,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
 </body>
+
 </html>

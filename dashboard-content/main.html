@@ -8,12 +8,17 @@
       </button>
     </div>
   </div>
-  <div id="searchDiv" class="col-md-6 mb-3">
-    <form class=" needs-validation row">
-      <div class="col-md-5 mb-3">
-        <input type="text" id="searchInput" class="form-control" required placeholder="Type your location">
+  <div id="searchDiv" class="col-md-10 mb-3">
+    <form class=" needs-validation row mb-1">
+      <div class="col-md-4 px-1 mb-3">
+        <input type="text" id="searchInput" class="form-control " required placeholder="Location">
       </div>
-      <button type="submit" id="searchButton" class="btn btn-primary align-self-end col-md-3 mb-3">Find</button>
+      <div class="col-md-4 px-1 mb-3">
+        <input type="text" id="radiusInput" class="form-control " placeholder="Search radius (optional)" pattern="^\d+?$">
+      </div>
+      <div class="col-2 col-md-3 col-lg-2 px-1 mb-1 "> 
+        <button type="submit" id="searchButton" class="btn btn-primary form-control">Find</button>
+      </div>
     </form>
     <ul class="list-group list-group-flush">
     </ul>

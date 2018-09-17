@@ -1,28 +1,22 @@
-var sensorsData;
-var chartArray;
-
+//Loads an array that contains the id charts to load
 function loadChartArrayFromLocalStorage() {
   const array = JSON.parse(localStorage.getItem('ChartArray'));
   if (array === null) return new Array();
   return array;
 }
 
+//Save an array that contains the id charts to load
 function saveChartArrayToLocalStorage(array) {
   localStorage.setItem('ChartArray', JSON.stringify(array));
 }
 
-function parseDate(date, format) {
-  return moment(new Date(date)).format(format);
-}
-
+//Creates chart on ctx and adds weather data to it
 function addDataToChart(ctx, sensorData) {
-  const measurements = (typeof sensorData !== 'undefined') ? sensorData.measurements : [];
-  const format = "DD-MM-YYYY HH:mm:ss";
-  let data = [];
+  const measurements = sensorData.measurements;
+  let dataToShowOnChart = [];
   moment().local(window.navigator.languages[0]);
-  console.log(window.navigator.languages[0]);
   measurements.forEach(measurement => {
-    data.push({
+    dataToShowOnChart.push({
       y: measurement.value,
       x: measurement.date
     });
@@ -30,9 +24,8 @@ function addDataToChart(ctx, sensorData) {
   const myChart = new Chart(ctx, {
     type: 'line',
     data: {
-      //labels: labels,
       datasets: [{
-        data: data,
+        data: dataToShowOnChart,
         lineTension: 0,
         backgroundColor: 'transparent',
         borderColor: '#007bff',
@@ -50,7 +43,6 @@ function addDataToChart(ctx, sensorData) {
         }],
         xAxes: [{
           type: 'time',
-          //distribution: 'series',
           ticks: {
             autoSkip: true,
             maxTicksLimit: 10,
@@ -70,10 +62,9 @@ function addDataToChart(ctx, sensorData) {
         displayColors: false,
         callbacks: {
           label: function (tooltipItem) {
-            return parseFloat(tooltipItem.yLabel.toString()).toFixed(2) + ' ' + unit.symbol;
+            return parseFloat(tooltipItem.yLabel.toString()).toFixed(2) + ' ' + sensorData.unit.symbol;
           },
           title: function (tooltipItem) {
-            //console.log(tooltipItem[0].xLabel.toString());
             return new Date(tooltipItem[0].xLabel.toString()).toLocaleString();
           }
         }
@@ -82,12 +73,7 @@ function addDataToChart(ctx, sensorData) {
   });
   return myChart;
 }
-
-function createChart() {
-  const chart = document.createElement("canvas");
-  return chart;
-}
-
+//Creates div with information about minimum, maximum and current value
 function createInfoDiv(sensorData) {
   const informationsDiv = document.createElement('div');
   let min, max, current, unit;
@@ -127,13 +113,8 @@ function createInfoDiv(sensorData) {
 
 }
 
-function loadCharts() {
 
-  chartArray = loadChartArrayFromLocalStorage();
-  getSensorData();
-
-}
-
+//Creates button for deleting a chart from dashboard
 function createDeleteButton(id) {
   const div = document.createElement('div');
   const divRow = document.createElement('div');
@@ -160,21 +141,19 @@ function createDeleteButton(id) {
       }
     }
     saveChartArrayToLocalStorage(array);
-    clearList();
+    clearSearchResultList();
   })
   divRow.appendChild(button);
   div.appendChild(divRow);
-
-
   return div;
 }
-
+//Load chart with a specyfic id
 function loadchart(id) {
   const sensorDiv = document.createElement('div');
   const chartsDiv = document.querySelector('#charts');
   const content = document.createElement("div");
   const chartDiv = document.createElement('div');
-  const chart = createChart()
+  const chart = document.createElement("canvas")
 
   let sensorData;
   sensorsData.forEach(sensor => {
@@ -197,9 +176,9 @@ function loadchart(id) {
 
   sensorDiv.appendChild(content);
   chartsDiv.appendChild(sensorDiv);
-  addDataToChart(chart, sensorData);
-
+  if (typeof sensorData !== "undefined") addDataToChart(chart, sensorData);
 }
+
 
 function checkIfContains(array, item) {
   var contain = false;
@@ -210,6 +189,38 @@ function checkIfContains(array, item) {
   return contain;
 }
 
+//Creates an alert informing about errors during the search
+function createErrorElement(message) {
+  const li = document.createElement("li");
+  const div = document.createElement("div");
+  const button = document.createElement("button");
+
+  li.classList.add('list-group-item');
+  li.classList.add('border-0');
+
+  div.classList.add("alert");
+  div.classList.add("alert-danger");
+  div.classList.add("alert-dismissible");
+  div.classList.add("fade");
+  div.classList.add("show");
+  div.setAttribute("role", "alert");
+  div.innerHTML = `<strong>Error: </strong>${message}`;
+
+  button.classList.add("close");
+  button.setAttribute("type", "button");
+  button.setAttribute("data-dismiss", "alert");
+  button.setAttribute("aria-label", "Close");
+  button.innerHTML = `<span aria-hidden="true">&times;</span>`;
+  button.addEventListener('click', function () {
+    this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
+  })
+  div.appendChild(button);
+  li.appendChild(div);
+
+  return li;
+}
+
+//Creates list element which contains a single search result
 function createListElement(sensor, name, distance) {
   const li = document.createElement('li');
   let buttonHTML;
@@ -244,29 +255,36 @@ function createListElement(sensor, name, distance) {
     saveChartArrayToLocalStorage(chartArray);
     const li = this.closest('.list-group-item');
     li.parentNode.removeChild(li);
-    getSensorData();
+    loadCharts();
   })
-  console.log(li.innerHTML);
   return li;
 }
 
-function clearList() {
+function clearSearchResultList() {
   const ul = document.querySelector('.list-group-flush');
   while (ul.firstChild != null) ul.removeChild(ul.firstChild);
 
 }
 
+function clearChartsDiv() {
+  const chartsDiv = document.querySelector('#charts');
+  while (chartsDiv.firstChild != null) chartsDiv.removeChild(chartsDiv.firstChild);
+}
+
+//Adds validation to search form, and action listener to submit button
 function addSearchValidationAndListener() {
   const button = document.querySelector("#searchButton");
-  const input = document.querySelector("#searchInput");
+  const searchInput = document.querySelector("#searchInput");
+  const radiusInput = document.querySelector("#radiusInput")
   const ul = document.querySelector('.list-group-flush');
-  addValidation(input);
+  addValidation(searchInput);
+  addValidation(radiusInput);
   button.addEventListener("click", function (e) {
     e.preventDefault();
-    if (validate(input, "Can not be empty")) {
+    if (validate(searchInput, "Can not be empty") && validate(radiusInput, "Must be positive integer")) {
       this.innerText = "Loading...";
       this.disabled = true;
-      fetch(restURL+'/measurementSource?address=' + encodeURI(input.value), {
+      fetch(restURL + '/measurementSource?address=' + encodeURI(searchInput.value), {
           mode: "cors",
           method: 'get',
           headers: {
@@ -275,30 +293,50 @@ function addSearchValidationAndListener() {
           },
         })
         .then(res => {
-          const response = res;
-          if (response.ok) {
-            clearList();
+          if (res.ok) {
+            clearSearchResultList();
             response.json()
               .then(data => {
                 data.forEach(source => {
                   source.sensors.forEach(sensor => {
-                    console.log('add');
                     ul.appendChild(createListElement(sensor, source.name, parseFloat(source.location.distance).toFixed(2) + 'km'));
                     this.innerText = "Find";
                     this.disabled = false;
                   })
                 });
               })
-          } // TODO ERROR CATCH
+          } else {
+            throw Error(res.status)
+          };
+        }).catch(function (error) {
+          button.innerText = "Find";
+          button.disabled = false;
+          switch (error.message) {
+            case "404":
+              ul.appendChild(createErrorElement("Can not find address"));
+              break;
+            case "400":
+              ul.appendChild(createErrorElement("Inaccurate address. Please enter more detailed data"));
+              break;
+            case "500":
+              ul.appendChild(createErrorElement("Internal server error.Please try again later"));
+            case "403":
+              window.location.href = "logout.html";
+              break;
+            default:
+              ul.appendChild(createErrorElement("Unknown error"));
+              break;
+          }
+
         })
     }
   });
 }
-
-function getSensorData() {
+//Gets data from remote server, about sensors saved in LocalStorage and shows this data on charts 
+function loadCharts() {
   const chartIds = loadChartArrayFromLocalStorage();
-  console.log('sensor data');
-  fetch(restURL+'/sensor?id=' + encodeURI(JSON.stringify(chartIds)), {
+  clearChartsDiv();
+  fetch(restURL + '/sensor?id=' + encodeURI(JSON.stringify(chartIds)), {
       mode: 'cors',
       method: 'get',
       headers: {
@@ -306,10 +344,24 @@ function getSensorData() {
         'Authorization': window.localStorage.getItem('Token')
       },
     })
-    .then(res => res.json().then(data => {
-      sensorsData = data
-      chartArray.forEach(chartId => {
-        loadchart(chartId);
-      });
-    }));
+    .then(res => {
+      if (res.ok) {
+        res.json().then(data => {
+          sensorsData = data
+          chartIds.forEach(chartId => {
+            loadchart(chartId);
+          });
+        })
+      } else throw Error(res.status);
+    }).catch(error => {
+      switch (error.message) {
+        case "403":
+          window.location.href = "logout.html";
+          break;
+        default:
+          //TODO
+          console.log("Error while reciving sensor data" + error.message);
+          break;
+      }
+    });
 }

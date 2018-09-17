@@ -1,13 +1,18 @@
+//List of Measurement Sources recieved from server
 var measurementSources = [];
+//List of units recieved form server
 var units = [];
 
-function measurementSourceCreationvalidationProcess(name, latitude, longitude) {
+//Checks if all fields from Measurement Source creation form are valid
+//return true if they are
+function measurementSourceCreationValidationProcess(name, latitude, longitude) {
     let isNameValid = validate(name, "Name cannot be empty");
     let isLatitudeValid = validate(latitude, "Please provide correct latitude");
     let isLongitudeValid = validate(longitude, "Please provide correct longitude");
     return isNameValid && isLatitudeValid && isLongitudeValid;
 }
 
+//Adds validation and action listener for submit button from Measurement Source creation form
 function createValidationForMeasurementSourceCreation() {
     const btn = document.getElementById("btn")
     const form = document.getElementById('createSourceForm');
@@ -22,15 +27,14 @@ function createValidationForMeasurementSourceCreation() {
 
     btn.addEventListener('click', e => {
         e.preventDefault();
-
-        if (measurementSourceCreationvalidationProcess(name, latitude, longitude)) {
+        if (measurementSourceCreationValidationProcess(name, latitude, longitude)) {
             const dataToSend = {
                 name: name.value,
                 latitude: latitude.value,
                 longitude: longitude.value,
-                publicly: publiclyCheck.value,
+                publicly: publiclyCheck.checked,
             }
-            fetch(restURL+'/measurementSource', {
+            fetch(restURL + '/measurementSource', {
                     mode: "cors",
                     method: 'post',
                     headers: {
@@ -42,10 +46,15 @@ function createValidationForMeasurementSourceCreation() {
                     if (res.ok) {
                         form.reset();
                         loadMeasurementSources();
+                    } else if (res.status == "403") {
+                        throw Error(res.status);
                     } else return res.json().then(Promise.reject.bind(Promise));
                 })
                 .catch(function (res) {
                     const response = res;
+                    if (res.message === "403") {
+                        window.location.href = "logout.html";
+                    }
                     if (response.hasOwnProperty('name')) {
                         name.classList.add('is-invalid')
                         setValidationMessage(name, response.name);
@@ -62,15 +71,15 @@ function createValidationForMeasurementSourceCreation() {
         }
     })
 }
-
-function getDate(date) {
-
+//Returns difference in minutes between given date and the present
+function getTimeInMinuteFromDate(date) {
     const now = new Date();
     const last = new Date(date);
     return Math.floor(((now - last) / 1000) / 60);
 
 }
 
+//Creates list with sensors created by user
 function fillSensorsList(index) {
     const sensorList = document.querySelectorAll('.list-group')[1];
     while (sensorList.firstChild) {
@@ -81,7 +90,7 @@ function fillSensorsList(index) {
         const li = document.createElement('li');
 
         const last = sensor.measurements;
-        const lastTime = (last === null || last.date === null) ? '-' : getDate(last.date);
+        const lastTime = (last === null || last.date === null) ? '-' : getTimeInMinuteFromDate(last.date);
         const lastValue = (last === null || last.value === null) ? '-' : last.value;
         li.classList.add('list-group-item');
         li.innerHTML = `
@@ -102,13 +111,12 @@ function fillSensorsList(index) {
         sensorList.appendChild(li);
     }
 }
-
+//Creates list with Measurement Sources created by user
 function fillMeasurementSourcesList() {
     const list = document.querySelector('.list-group');
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
-    console.log(measurementSources)
     for (let source of measurementSources) {
         const button = document.createElement('button');
         button.classList.add('list-group-item');
@@ -140,7 +148,7 @@ function fillMeasurementSourcesList() {
     }
 }
 
-
+//Adds event listener to measurement sources list, which switch list of sensors, based on the selected source 
 function addMeasurementSourcesListEventListener() {
     const buttons = document.querySelector('.list-group').children;
     for (let button of buttons) {
@@ -154,7 +162,7 @@ function addMeasurementSourcesListEventListener() {
         })
     }
 }
-
+// Fills  source selector used to create sensors
 function fillMeasurementSourceSelector() {
     const selector = document.getElementById('sourceSelector');
     for (let i = selector.options.length - 1; i >= 0; i--) {
@@ -166,26 +174,39 @@ function fillMeasurementSourceSelector() {
         selector.add(option);
     }
 }
-
+// Loads Measurement sources data from server
 function loadMeasurementSources() {
-    fetch(restURL+'/measurementSource', {
+    fetch(restURL + '/measurementSource', {
             mode: "cors",
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': window.localStorage.getItem('Token')
             }
-        }).then(res => res.json())
-        .then(res => {
-            measurementSources = res;
-            fillMeasurementSourcesList();
-            addMeasurementSourcesListEventListener();
-            fillMeasurementSourceSelector();
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(res => {
+                    measurementSources = res;
+                    fillMeasurementSourcesList();
+                    addMeasurementSourcesListEventListener();
+                    fillMeasurementSourceSelector();
+                })
+            } else throw Error(res.status);
+        })
+        .catch(error => {
+            switch (error.message) {
+                case "403":
+                    window.location.href = "logout.html";
+                    break;
+                default:
+                    //TODO
+                    console.log("Error while reciving sensor data" + error.message);
+                    break;
+            }
         })
 }
 
-
-
+// Fills  unit  selector used to create sensors
 function fillUnitSelector() {
     const selector = document.getElementById('unitSelector');
     for (let unit of units) {
@@ -195,8 +216,9 @@ function fillUnitSelector() {
     }
 }
 
+//Loads units  list from server
 function loadUnits() {
-    fetch(restURL+'/unit', {
+    fetch(restURL + '/unit', {
             mode: "cors",
             method: 'get',
             headers: {
@@ -210,7 +232,7 @@ function loadUnits() {
         })
 }
 
-
+//Adds submit listener to the form which create a new sensor
 function createSensorFormListener() {
     const button = document.getElementById('btn2');
     const form = document.getElementById('addSensorForm');
@@ -226,41 +248,37 @@ function createSensorFormListener() {
                 return element.symbol === unitSelector.value;
             }).id
         }
-        console.log(dataToSend);
-        fetch(restURL+'/sensor', {
-                mode: "cors",
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': window.localStorage.getItem('Token')
-                },
-                body: JSON.stringify(dataToSend)
-            }).then(res => {
-                if (res.ok) {
-                    form.reset();
-                    loadMeasurementSources();
-                } else return res.json().then(Promise.reject.bind(Promise));
-            })
-            .catch(function (res) {
-                console.log(res);
-
-            })
+        fetch(restURL + '/sensor', {
+            mode: "cors",
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': window.localStorage.getItem('Token')
+            },
+            body: JSON.stringify(dataToSend)
+        }).then(res => {
+            if (res.ok) {
+                form.reset();
+                loadMeasurementSources();
+            }
+        })
     })
 }
 
+//Loads user API key from server
 function loadApiKey() {
     const apiInput = document.getElementById('key');
-    fetch(restURL+'/key', {
-        mode: "cors",
-        method: "get",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': window.localStorage.getItem('Token')
-        }}).then(res => res.json())
+    fetch(restURL + '/key', {
+            mode: "cors",
+            method: "get",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': window.localStorage.getItem('Token')
+            }
+        }).then(res => res.json())
         .then(res => {
-            const response=res;
-            console.log(res);
+            const response = res;
             apiInput.value = response.accessKey;
         })
-    
+
 }

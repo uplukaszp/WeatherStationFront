@@ -5,52 +5,53 @@
     <div class="col-md-12 order-md-1 border-bottom">
         <form id="createSourceForm" class="needs-validation row">
             <h1 class="h5 col-md-12">Create new Measurement source</h1>
-            <div class="col-md-2 mb-3">
+            <div class="col-md-2 col-xl-1 mb-3  px-1">
                 <label for="measurementSourceName" class="sr-only">Name</label>
                 <input type="text" class="form-control" id="measurementSourceName" placeholder="Name" value="" autofocus required pattern=".{1,}">
             </div>
-            <div class="col-md-2 mb-3">
-                <label for="Latitude" class="sr-only">Latitude</label>
+            <div class="col-md-2 mb-3 col-xl-1  px-1">
+                <label for="latitude" class="sr-only">Latitude</label>
                 <input type="text" class="form-control" id="latitude" placeholder="Latitude" value="" required pattern="^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$">
             </div>
-            <div class="col-md-2 mb-3">
-                <label for="Longitude" class="sr-only">Confirm new Password</label>
+            <div class="col-md-2 mb-3 col-xl-1  px-1">
+                <label for="longitude" class="sr-only">Longitude</label>
                 <input type="text" class="form-control" id="longitude" placeholder="Longitude" value="" required pattern="^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$">
             </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" value="" id="publiclyCheck">
+            <div class="col-md-2 ml-1 mb-3">
+                <input class="form-check-input" type="checkbox" id="publiclyCheck">
                 <label class="form-check-label" for="publiclyCheck">
                     Visible for all
                 </label>
             </div>
-            <div class="col-md-3 mb-3">
-                <button type="submit" id="btn" class="btn btn-primary ">Create</button>
+            <div class="col-md-2 mb-3 col-xl-1 px-1">
+                <button type="submit" id="btn" class="btn btn-block btn-primary px-0">Create</button>
             </div>
         </form>
     </div>
     <div class="col-md-12 order-md-1 border-bottom">
         <form id="addSensorForm" class="needs-validation row">
             <h1 class="h5 col-md-12 mt-3">Add new Sensor</h1>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3 px-1 col-xl-2">
                 <label for="unitSelector" class="">Unit</label>
                 <select class="form-control" id="unitSelector"></select>
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3 px-1 col-xl-2">
                 <label for="sourceSelector" class="">Source</label>
                 <select class="form-control" id="sourceSelector"></select>
             </div>
-            <div class=" align-self-end col-md-3 mb-3">
+            <div class=" align-self-end col-md-3 mb-3 col-xl-2">
                 <button type="submit" id="btn2" class="btn btn-primary ">Add</button>
             </div>
         </form>
     </div>
-    <div class="row mb-3">
-        <div class="col-md-5">
+    <div class="col-md-12">
+    <div class="row mb-3 border-bottom">
+        <div class="col-md-7 col-lg-5 col-xl-4">
             <h1 class="h5 mt-3">Your Measurement sources</h1>
             <div class="list-group mb-3">
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 col-lg-4">
             <h1 class="h5 mt-3">Sensors</h1>
             <ul class="list-group list-group-flush">
             </ul>
@@ -59,25 +60,33 @@
 
         </div>
     </div>
-    <div class="border-bottom mb-3">
-        <h1 class="h5 col-md-12 mt-3">Api key</h1>
-        <div class="row ml-3">
-            <label for="key" class="col md-2 col-form-label">Your API key:</label>
-            <input type="text" readonly class=" col md-5 form-control-plaintext" id="key" value="">
+</div>
+    <div class="col-md-12 mb-3">
+        <h1 class="h5 mt-3">Api key</h1>
+        <div class="row">
+            <label for="key" class="col-md-2 col-form-label">Your API key:</label>
+            <input type="text" readonly class=" col-md-5 form-control-plaintext" id="key" value="">
         </div>
-        <div class="">
-            <h1 class="h6 col-md-12 mt-3">Adding data</h1>
-            <div class="border rounded p-3 ml-3 mb-3">
-            <code>curl -i -X POST 
-                -H "Content-Type:application/json" 
-                -H "key:YOUR_API_KEY" 
-                -d 
-             '{  
-                id:SENSOR_ID,
-                value:MEASURED_VALUE,
-                date:(OPTIONAL)
-             }' 
-              'http://api.heroku.com/measurements'</code>
+        <div>
+            <h1 class="h6 mt-3">Adding data</h1>
+            <div class="border rounded p-3 mb-3">
+            <code>            
+              curl -i -X POST \
+              -H "content-type:application/json" \
+              -H "Authorization:Bearer YOUR_API_KEY" \
+              -d \
+           '{
+             "measurements":
+              [
+               {
+                 "id": SENSOR_ID,
+                 "value": MEASURED_VALUE,
+                 "date": MEASUREMENT_DATE(optional)(format: yyyy-MM-dd'T'HH:mm:ss.SSSZ )
+               }
+             ]
+           }' \
+            'http://localhost:8080/measurement'
+            </code>
             </div>
         </div>
     </div>
