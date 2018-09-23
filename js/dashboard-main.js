@@ -332,11 +332,37 @@ function addSearchValidationAndListener() {
     }
   });
 }
+function calculateStartDate()
+{
+  switch(window.localStorage.getItem("dropdownMenuItemId")){
+    case "dItem-0":
+    return moment().subtract(1,"day"); 
+    case "dItem-1":
+    return moment().subtract(2,"day");
+    case "dItem-2":
+    return moment().subtract(7,"day");
+    case "dItem-3":
+    return moment().subtract(1,"month");
+    case "dItem-4":
+    return moment().subtract(1,"year");
+    case "dItem-5":
+    return null;
+  }
+}
+
 //Gets data from remote server, about sensors saved in LocalStorage and shows this data on charts 
 function loadCharts() {
   const chartIds = loadChartArrayFromLocalStorage();
+  const startDate=calculateStartDate().format("YYYY-MM-DDTHH:mm:ssZ");
+  const endDate=moment().format("YYYY-MM-DDTHH:mm:ssZ");
+  console.log(startDate);
+  console.log(endDate);
+  let url;
+  if(startDate===null)url=restURL + '/sensor?id=' + encodeURI(JSON.stringify(chartIds));
+  else url=restURL + '/sensor?id=' + encodeURIComponent(JSON.stringify(chartIds))+"&startDate="+encodeURIComponent(startDate)+"&endDate="+encodeURIComponent(endDate)
+
   clearChartsDiv();
-  fetch(restURL + '/sensor?id=' + encodeURI(JSON.stringify(chartIds)), {
+  fetch(url, {
       mode: 'cors',
       method: 'get',
       headers: {
@@ -364,4 +390,31 @@ function loadCharts() {
           break;
       }
     });
+}
+
+function switchMenuItems(menuButton,menuItems,clickedItem){
+  menuItems.forEach(item=>{
+    if(item.classList.contains('d-none'))item.classList.remove('d-none');
+  })
+  clickedItem.classList.add('d-none');
+  menuButton.innerText=clickedItem.innerText;
+  window.localStorage.setItem('dropdownMenuItemId',clickedItem.id);
+}
+function addDropDownListener(dropdownMenubutton,dropdownMenuItems){
+  
+  dropdownMenuItems.forEach(item=>item.addEventListener("click",function(){
+      switchMenuItems(dropdownMenubutton,dropdownMenuItems,this);
+      loadCharts();
+  }))
+}
+
+function initializeDropdownMenu(){
+  let activeMenuItemId=window.localStorage.getItem('dropdownMenuItemId');
+  if(typeof activeMenuItemId==='undefined')activeMenuItem="dItem-0";
+  const dropdownMenubutton=document.querySelector("#dropdownMenuButton");
+  const dropdownMenuItems=document.querySelectorAll(".dropdown-item");
+  const activeMenuItem=document.querySelector("#"+activeMenuItemId);
+  console.log(activeMenuItem);
+  addDropDownListener(dropdownMenubutton,dropdownMenuItems);
+  switchMenuItems(dropdownMenubutton,dropdownMenuItems,activeMenuItem);
 }

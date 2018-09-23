@@ -10,6 +10,7 @@ function loadDashboardContent(content) {
             if (content === 'main.html') {
                 addSearchValidationAndListener();
                 loadCharts();
+                initializeDropdownMenu();
             }
             if (content === 'account.html') {
                 createValidationForPasswordChange();
@@ -26,26 +27,8 @@ function loadDashboardContent(content) {
         })
 }
 
-function addTogglerListener() {
-    const toggler = document.querySelector('.navbar-toggler');
-    toggler.addEventListener('click', function (e) {
-        const main = document.querySelector('main');
-        //animationendlistner
-      /*  if (main.classList.contains('ml-sm-auto')) {
-            main.classList.remove('ml-sm-auto');
-            main.classList.remove('col-lg-10');
-            main.classList.add('col-lg-12');
-        }else{
-            main.classList.add('ml-sm-auto');
-            main.classList.remove('col-lg-12');
-            main.classList.add('col-lg-10');
-        }*/
-    })
-}
 document.addEventListener('DOMContentLoaded', function () {
-    //loadDashboardContent('main.html');
-    loadDashboardContent("sensors.html");
-    addTogglerListener();
+    loadDashboardContent("main.html");
     const hrefs = document.querySelector('ul').querySelectorAll('a');
     hrefs.forEach(href => {
         href.addEventListener('click', function (e) {
