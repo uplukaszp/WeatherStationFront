@@ -163,9 +163,12 @@ function loadchart(id) {
   });
 
   sensorDiv.classList.add('col-md-6');
-  sensorDiv.classList.add("border");
-  sensorDiv.classList.add("p-3");
-  chartDiv.classList.add("col-md-12");
+  content.classList.add("border");
+  content.classList.add('rounded')
+  sensorDiv.classList.add("p-0");
+  content.classList.add('m-3');
+  content.classList.add('p-3');
+  chartDiv.classList.add("col-12");
   chartDiv.classList.add("chart-container");
   content.classList.add('row')
 
@@ -295,7 +298,7 @@ function addSearchValidationAndListener() {
         .then(res => {
           if (res.ok) {
             clearSearchResultList();
-            response.json()
+            res.json()
               .then(data => {
                 data.forEach(source => {
                   source.sensors.forEach(sensor => {
