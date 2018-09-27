@@ -348,7 +348,7 @@ function calculateStartDate()
     return moment().subtract(1,"month");
     case "dItem-4":
     return moment().subtract(1,"year");
-    case "dItem-5":
+    default:
     return null;
   }
 }
@@ -356,13 +356,13 @@ function calculateStartDate()
 //Gets data from remote server, about sensors saved in LocalStorage and shows this data on charts 
 function loadCharts() {
   const chartIds = loadChartArrayFromLocalStorage();
-  const startDate=calculateStartDate().format("YYYY-MM-DDTHH:mm:ssZ");
+  const startDate=calculateStartDate();
   const endDate=moment().format("YYYY-MM-DDTHH:mm:ssZ");
   console.log(startDate);
   console.log(endDate);
   let url;
   if(startDate===null)url=restURL + '/sensor?id=' + encodeURI(JSON.stringify(chartIds));
-  else url=restURL + '/sensor?id=' + encodeURIComponent(JSON.stringify(chartIds))+"&startDate="+encodeURIComponent(startDate)+"&endDate="+encodeURIComponent(endDate)
+  else url=restURL + '/sensor?id=' + encodeURIComponent(JSON.stringify(chartIds))+"&startDate="+encodeURIComponent(startDate.format("YYYY-MM-DDTHH:mm:ssZ"))+"&endDate="+encodeURIComponent(endDate)
 
   clearChartsDiv();
   fetch(url, {
