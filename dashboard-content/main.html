@@ -18,12 +18,13 @@
     </div>
   </div>
   <div id="searchDiv" class="col-md-10 mb-3">
+    <p class="">Enter the address in the area where you want to find the sensors. Enter the radius to narrow down the search area to the given value in kilometers.</p>
     <form class=" needs-validation row mb-1">
       <div class="col-md-4 px-1 mb-3">
         <input type="text" id="searchInput" class="form-control " required placeholder="Location">
       </div>
       <div class="col-md-4 px-1 mb-3">
-        <input type="text" id="radiusInput" class="form-control " placeholder="Search radius (optional)" pattern="^\d+?$">
+        <input type="text" id="radiusInput" class="form-control " placeholder="Search radius (in km)(optional)" pattern="^\d+?$">
       </div>
       <div class="col-2 col-md-3 col-lg-2 px-1 mb-1 ">
         <button type="submit" id="searchButton" class="btn btn-primary form-control">Find</button>

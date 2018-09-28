@@ -46,12 +46,12 @@
     </div>
     <div class="col-md-12">
     <div class="row mb-3 border-bottom">
-        <div class="col-md-7 col-lg-5 col-xl-4">
+        <div class="col-md-7 col-lg-6 col-xl-5">
             <h1 class="h5 mt-3">Your Measurement sources</h1>
             <div class="list-group mb-3">
             </div>
         </div>
-        <div class="col-md-5 col-lg-4">
+        <div class="col-md-5 col-lg-5 col-xl-5">
             <h1 class="h5 mt-3">Sensors</h1>
             <ul class="list-group list-group-flush">
             </ul>
@@ -61,14 +61,19 @@
         </div>
     </div>
 </div>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Advanced</h1>
+</div>
     <div class="col-md-12 mb-3">
         <h1 class="h5 mt-3">Api key</h1>
-        <div class="row">
+        <div class="row mb-3 border-bottom pb-3">
             <label for="key" class="col-md-2 col-form-label">Your API key:</label>
             <input type="text" readonly class=" col-md-5 form-control-plaintext" id="key" value="">
+            <p class="col-12 text">This key allows the server to authorize your sensors. Use it when adding new measurement data. An example of how you should add data is presented below.</p>
         </div>
         <div>
-            <h1 class="h6 mt-3">Adding data</h1>
+            <h1 class="h5 mt-3">Adding data</h1>
+            <p class="col-12 text">To add data, you must use the HTTP POST method as in the example below:</p>
             <div class="border rounded p-3 mb-3">
             <code>            
               curl -i -X POST \

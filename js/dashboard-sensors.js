@@ -211,7 +211,7 @@ function fillUnitSelector() {
     const selector = document.getElementById('unitSelector');
     for (let unit of units) {
         const option = document.createElement("option");
-        option.innerText = unit.symbol;
+        option.innerText = unit.symbol+" ("+unit.description+")";
         selector.add(option);
     }
 }
@@ -245,7 +245,7 @@ function createSensorFormListener() {
                 return element.name === sourceSelector.value;
             }).id,
             unit: units.find(function (element) {
-                return element.symbol === unitSelector.value;
+                return element.symbol === unitSelector.value.substr(0,unitSelector.value.indexOf(' '));
             }).id
         }
         fetch(restURL + '/sensor', {

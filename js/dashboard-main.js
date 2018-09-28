@@ -229,14 +229,14 @@ function createListElement(sensor, name, distance) {
   let buttonHTML;
   const chartArray = loadChartArrayFromLocalStorage();
   if (!checkIfContains(chartArray, sensor.id)) {
-    buttonHTML = ' <button class="btn btn-primary mb-3 m-3 col-md-2 btn-sm">Add</button>';
+    buttonHTML = ' <button class="btn btn-primary mb-3 m-3 col-md-2 btn-sm">Add to viev</button>';
   } else {
-    buttonHTML = ' <button class="btn btn-primary mb-3 m-3 col-md-2 btn-sm" disabled>Add</button>'
+    buttonHTML = ' <button class="btn btn-primary mb-3 m-3 col-md-2 btn-sm" disabled>Add to viev</button>'
   }
   li.classList.add('list-group-item');
   li.innerHTML = `
-  <div class="row text-left wrap" id=${sensor.id}>
-          <span class="col-md-3">
+  <div class="row text-left wrap " id=${sensor.id}>
+          <span class="col-md-3 break-text">
             <h6>Name:</h6>
             <small>${name}</small>
           </span>
@@ -287,7 +287,9 @@ function addSearchValidationAndListener() {
     if (validate(searchInput, "Can not be empty") && validate(radiusInput, "Must be positive integer")) {
       this.innerText = "Loading...";
       this.disabled = true;
-      fetch(restURL + '/measurementSource?address=' + encodeURI(searchInput.value), {
+      let url=restURL + '/measurementSource?address='+encodeURI(searchInput.value);
+      if(radiusInput.value.length>0)url+='&range='+encodeURI(radiusInput.value);
+      fetch(url, {
           mode: "cors",
           method: 'get',
           headers: {
@@ -300,13 +302,20 @@ function addSearchValidationAndListener() {
             clearSearchResultList();
             res.json()
               .then(data => {
+                if(data.length==0)throw Error();
+                this.innerText = "Find";
+                this.disabled = false;
                 data.forEach(source => {
                   source.sensors.forEach(sensor => {
                     ul.appendChild(createListElement(sensor, source.name, parseFloat(source.location.distance).toFixed(2) + 'km'));
-                    this.innerText = "Find";
-                    this.disabled = false;
+                   
                   })
                 });
+              }).catch(function(){
+                button.innerText = "Find";
+                button.disabled = false;
+                if(ul.firstChild)ul.removeChild(ul.firstChild);
+                ul.appendChild(createErrorElement("No sensor found,that match criteria"));
               })
           } else {
             throw Error(res.status)
@@ -314,6 +323,7 @@ function addSearchValidationAndListener() {
         }).catch(function (error) {
           button.innerText = "Find";
           button.disabled = false;
+          if(ul.firstChild)ul.removeChild(ul.firstChild);
           switch (error.message) {
             case "404":
               ul.appendChild(createErrorElement("Can not find address"));

@@ -1,1 +1,2 @@
-var restURL="https://javameteo.herokuapp.com";
+var restURL=//"https://javameteo.herokuapp.com";
+"http://localhost:8080"
